@@ -1,4 +1,4 @@
-const pool = require('../config/database'); // 데이터베이스 연결 모듈 가져오기
+const pool = require('../database/database'); // 데이터베이스 연결 모듈 가져오기
 
 // 사용자별 게시글 조회
 exports.getUserPosts = async (req, res) => {

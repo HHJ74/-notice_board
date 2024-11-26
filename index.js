@@ -7,7 +7,7 @@ require('dotenv').config(); // 환경 변수 관리
 
 // 2. 서버 초기화
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 8080;
 
 // 3. 미들웨어 설정 (클라이언트의 요청(Request)과 서버의 응답(Response) 사이에 실행되는 함수)
 // 빌트인 미들웨어
