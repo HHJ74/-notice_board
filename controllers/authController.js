@@ -24,6 +24,12 @@ exports.createUser = async (req, res) => {
             return res.status(400).json({ error: 'user_id, user_pw, and user_nick are required' });
         }
 
+        // 중복 ID 확인
+        const existingUser = await pool.query('SELECT * FROM users WHERE user_id = $1', [user_id]);
+        if (existingUser.rows.length > 0) {
+            return res.status(409).json({ error: 'User ID already exists' });
+        }
+
         // 비밀번호 암호화
         const saltRounds = 10; // salt 횟수 (10은 일반적으로 적당함)
         const hashedPassword = await bcrypt.hash(user_pw, saltRounds);
@@ -33,7 +39,7 @@ exports.createUser = async (req, res) => {
             INSERT INTO users (user_id, user_pw, user_name, user_nick, created_date, user_state)
             VALUES ($1, $2, $3, $4, NOW(), $5)
             RETURNING *`; // 생성된 사용자 반환
-        const values = [user_id, hashedPassword, user_name, user_nick, 'active']; // 초기 상태 'active' 설정
+        const values = [user_id, hashedPassword, user_name, user_nick, 1]; // 초기 상태 1 설정
         const result = await pool.query(query, values);
 
         res.status(201).json({
