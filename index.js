@@ -20,6 +20,7 @@ app.use(cors()); // CORS 정책 활성화(서드파티 미들웨어 : 교차 출
 // 4. 라우터 연결
 app.use(require('./routes/authRoutes')); // 라우터 파일 가져오기
 app.use(require('./routes/postRoutes'));
+app.use(require('./routes/commentRoutes'))
 
 
 // 5. 기본 라우트 설정 (테스트용)
