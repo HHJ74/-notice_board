@@ -16,4 +16,8 @@ router.post('/users/:user_number/posts', postController.createUserPosts);
 // POST /posts/:post_number - 게시글 수정
 router.put('/posts/:post_number', postController.updatePost);
 
+// 게시글 삭제
+router.delete('/posts/:post_number', postController.deletePost);
+
+
 module.exports = router;

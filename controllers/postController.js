@@ -140,3 +140,35 @@ exports.updatePost = async (req, res) => {
         res.status(500).json({ error: 'Failed to update post' });
     }
 };
+
+// 게시글 삭제
+exports.deletePost = async (req, res) => {
+    try {
+        const { post_number } = req.params; // URL 파라미터에서 게시글 번호 추출
+
+        // 유효성 검증
+        if (!post_number || isNaN(post_number)) {
+            return res.status(400).json({ error: 'Invalid post number' });
+        }
+
+        // 게시글 삭제
+        const query = `
+            UPDATE posts
+            SET post_state = 0, deleted_date = CURRENT_TIMESTAMP
+            WHERE post_number = $1
+            RETURNING *`;
+        const result = await pool.query(query, [post_number]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Post not found' });
+        }
+
+        res.status(200).json({
+            message: 'Post deleted successfully',
+            post: result.rows[0], // 논리적으로 삭제된 게시글 반환
+        });
+    } catch (error) {
+        console.error('Error deleting post:', error);
+        res.status(500).json({ error: 'Failed to delete post' });
+    }
+};
