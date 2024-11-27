@@ -21,6 +21,31 @@ exports.getUserPosts = async (req, res) => {
     }
 };
 
+// 특정 게시물 조회
+exports.getPostByPostNum = async (req, res) => {
+    try {
+        const { post_number } = req.params; // URL 파라미터에서 게시물 ID 추출
+
+        // 유효성 검증
+        if (!post_number || isNaN(post_number)) {
+            return res.status(400).json({ error: 'Invalid post ID' });
+        }
+
+        // 데이터베이스에서 게시물 조회
+        const query = 'SELECT * FROM posts WHERE post_number = $1';
+        const result = await pool.query(query, [post_number]);
+
+        if (result.rows.length === 0) {
+            return res.status(404).json({ error: 'Post not found' });
+        }
+
+        res.status(200).json(result.rows[0]); // 게시물 반환
+    } catch (error) {
+        console.error('Error fetching post:', error);
+        res.status(500).json({ error: 'Failed to fetch post' });
+    }
+};
+
 
 // 새로운 게시글 생성
 exports.createUserPosts = async (req, res) => {
@@ -38,7 +63,7 @@ exports.createUserPosts = async (req, res) => {
 
         // 데이터베이스에 게시글 저장
         const query = `
-            INSERT INTO posts (user_number, title, content, created_at)
+            INSERT INTO posts (user_number, post_title, post_content, created_dat)
             VALUES ($1, $2, $3, NOW())
             RETURNING *`;
         const values = [user_number, title, content];

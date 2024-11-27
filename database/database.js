@@ -12,7 +12,7 @@ const pool = new Pool({
   user: process.env.DATABASE_USER,
   password: process.env.DATABASE_PASSWORD,
   database: process.env.DATABASE_NAME,
-  ssl: process.env.DATABASE_SSL_MODE === 'require',
+  // ssl: process.env.DATABASE_SSL_MODE === 'require',
   max: parseInt(process.env.DATABASE_POOL_SIZE, 10) || 10, // 연결 풀 크기
 });
 
